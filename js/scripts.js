@@ -26,8 +26,8 @@ var x = d3.scaleBand()
 
 // Add Y axis
 var y = d3.scaleLinear()
-    .domain([-30, 30])
-    .range([ height, 0]);
+  .domain([-30, 30])
+  .range([ height, 0]);
 
 svg.append("g")
   .attr("transform", "translate(0," + y(0) + ")")
@@ -40,12 +40,18 @@ svg.append("g")
 var bar = svg.selectAll("mybar.bar").data(data).enter().append("g")
 
 bar.append("rect")
-      .attr("x", function(d) { return x(d.Label); })
-      .attr("y", function(d) { return y(Math.max(0, d.Value)); })
-      .attr("width", x.bandwidth())
-      .attr("height", function(d) { return Math.abs(y(d.Value) - y(0)); })
-      .attr("fill", function(d) { return (d.Value < 0 ? 'green' : 'red')})
-      .attr("class", "bar")
+  .attr("x", function(d) { return x(d.Label); })
+  .attr("y", function(d) { return y(Math.max(0, d.Value)); })
+  .attr("width", x.bandwidth())
+  .attr("height", function(d) { return Math.abs(y(d.Value) - y(0)); })
+  .attr("fill", function(d) { return (d.Value < 0 ? 'green' : 'red')})
+  .attr("class", "bar")
+
+bar.append("text")
+  .text((d) => {return d.Value})
+  .attr("x", (d) => x(d.Label))
+  .attr("y", (d) => y(Math.max(0, d.Value)) )
+  .attr("class", "label")
 
 function buildBars() {
     // Bars
@@ -56,6 +62,12 @@ function buildBars() {
       .attr("height", function(d) { return Math.abs(y(d.Value) - y(0)); })
       .attr("fill", function(d) { return (d.Value < 0 ? 'green' : 'red')})
       .attr("class", "bar")
+
+    svg.selectAll("text.label")
+      .text((d) => {return d.Value})
+      .attr("x", (d) => x(d.Label))
+      .attr("y", (d) => y(d.Value) + (d.Value > 0 ? 0 : 11) )
+      .attr("class", "label")
 
     // flip labels
     if (data[0].Value < 0) {
